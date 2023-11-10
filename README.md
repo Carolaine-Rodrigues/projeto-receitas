@@ -41,7 +41,6 @@ Configurar o ambiente de desenvolvimento com as tecnologias escolhidas.
 
 Criar o frontend da aplicação com formulários para adicionar e atualizar receitas.
 
-Implementar o backend com rotas e controladores para lidar com as operações CRUD de receitas.
 
 Integrar um sistema de autenticação para proteger as receitas dos usuários.
 
