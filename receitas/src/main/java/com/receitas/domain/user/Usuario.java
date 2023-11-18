@@ -18,9 +18,9 @@ public class Usuario {
     private String email;
     private String senhaHash;
 
-    public Usuario(String email, String senha){
-        this.email = email;
-        this.senhaHash = hashSenha(senha);
+    public Usuario(UsuarioRegistro dados){
+       this.email = dados.email();
+       this.senhaHash = dados.senha();
     }
 
     public String getEmail() {
