@@ -1,8 +1,16 @@
 package com.receitas.domain.user;
 
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public record UsuarioLogin(String email, String senha) {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class UsuarioLogin{
+    private String email;
+    private String senha;
+
+
 }

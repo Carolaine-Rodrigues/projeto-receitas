@@ -1,33 +1,63 @@
 package com.receitas.domain.user;
 
-import org.mindrot.jbcrypt.BCrypt;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class UsuarioService {
 
-    private String email;
-    private String senhaHash;
-    private UsuarioRepository repository;
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
-    public UsuarioService(UsuarioRepository repository){
-        this.repository = repository;
-    }
+    // metado para salvar usuário
+    public Usuario salvarUsuario(Usuario dados){
 
-    public String getEmail() {
-        return email;
-    }
-    public Boolean verifaSenha(String senha){
-        return BCrypt.checkpw(senha, senhaHash);
+       return usuarioRepository.save(dados);
     }
 
-    public String hashSenha(String senha){
-        String salt = BCrypt.gensalt(12);
-        return BCrypt.hashpw(senha, salt);
+    //metado para listar todos
+    public List<Usuario> listarTodos(){
+        List<Usuario> usuarios = usuarioRepository.findAll();
+        return usuarios;
+    }
+    //metado para listar por id
+    public Usuario listarId(Long id){
+        var usuario = usuarioRepository.findById(id).get();
+        return usuario;
+    }
+    //metado para atualizar
+    public Usuario atualizar(Long id, Map<String,String> dados){
+        Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
+        if(usuarioOptional.isPresent()){
+            Usuario usuario = usuarioOptional.get();
+            if(dados.containsKey("email")){
+                usuario.setEmail(dados.get("email"));
+            }
+            if(dados.containsKey("senha")){
+                usuario.setSenha(dados.get("senha"));
+            }
+            usuarioRepository.save(usuario);
+            return usuario;
+        }else{
+            throw new EntityNotFoundException();
+        }
     }
 
-    public Boolean atenticarUsuario(String email, String senhaHash){
-        Usuario usuario = repository.findByEmail(email);
-        return usuario !=null && usuario.getSenhaHash().equals(senhaHash);
+    //metado para deletar
+    public void excluir(Long id){
+        Optional<Usuario> excluirUsuario = usuarioRepository.findById(id);
+
+        if(excluirUsuario.isPresent()){
+            Usuario usuario = excluirUsuario.get();
+            usuarioRepository.delete(usuario);
+        }else {
+            throw new EntityNotFoundException();
+        }
     }
+
 }

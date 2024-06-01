@@ -1,41 +1,57 @@
 package com.receitas.domain.controller;
 
 import com.receitas.domain.user.Usuario;
-import com.receitas.domain.user.UsuarioRegistro;
-import com.receitas.domain.user.UsuarioRepository;
 import com.receitas.domain.user.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import java.util.Map;
+
+
 
 @RestController
-@RequestMapping(value= "/login")
+@RequestMapping("/login")
 public class LoginController {
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
-
+    private final PasswordEncoder encoder;
     @Autowired
     private UsuarioService usuarioService;
 
-    public LoginController(UsuarioService usuarioService){
-        this.usuarioService = usuarioService;
+    public LoginController(PasswordEncoder encoder) {
+        this.encoder = encoder;
     }
 
-    @PostMapping(value= "/cadastro/usuario")
-    public ResponseEntity cadastraLogin(@RequestBody UsuarioRegistro usuarioRegistro){
-        Usuario usuario = new Usuario();
-        usuarioRepository.save(usuario);
-        return ResponseEntity.ok(usuario);
+    @PostMapping("/cadastrar")
+    public ResponseEntity salvar(@RequestBody Usuario dados){
+
+        dados.setSenha(encoder.encode(dados.getSenha()));
+
+        var usuarioSalvo = usuarioService.salvarUsuario(dados);
+        return ResponseEntity.ok().body(usuarioSalvo);
     }
 
-    @PostMapping(value= "/usuario/autenticado")
-    public ResponseEntity<String> login(@RequestBody Usuario usuario) {
-            if (usuarioService.atenticarUsuario(usuario.getEmail(), usuario.getSenhaHash())) {
-                return ResponseEntity.ok("Login bem-sucedido");
-            }
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciais inválidas");
-        }
+    @GetMapping("/usuarios")
+    public ResponseEntity listarUsuarios(){
+        var usuarios = usuarioService.listarTodos();
+        return ResponseEntity.ok().body(usuarios);
     }
+
+    @GetMapping("/usuario/{id}")
+    public ResponseEntity listarId(@PathVariable Long id){
+        var usuario = usuarioService.listarId(id);
+        return ResponseEntity.ok().body(usuario);
+    }
+
+    @DeleteMapping("/excluir/{id}")
+    public ResponseEntity excluirId(@PathVariable Long id){
+        usuarioService.excluir(id);
+        return ResponseEntity.noContent().build();
+    }
+    @PatchMapping("/atualizar/{id}")
+    public ResponseEntity atualizar(@PathVariable Long id, @RequestBody Usuario dados){
+        var atualizarUsuario = usuarioService.atualizar(id,(Map<String, String>) dados);
+        return ResponseEntity.ok().body(atualizarUsuario);
+    }
+}
 
