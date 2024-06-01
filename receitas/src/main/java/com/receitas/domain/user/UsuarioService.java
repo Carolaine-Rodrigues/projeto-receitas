@@ -14,13 +14,13 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    // metado para salvar usuário
+
     public Usuario salvarUsuario(Usuario dados){
 
        return usuarioRepository.save(dados);
     }
 
-    //metado para listar todos
+
     public List<Usuario> listarTodos(){
         List<Usuario> usuarios = usuarioRepository.findAll();
         return usuarios;
@@ -30,7 +30,7 @@ public class UsuarioService {
         var usuario = usuarioRepository.findById(id).get();
         return usuario;
     }
-    //metado para atualizar
+
     public Usuario atualizar(Long id, Map<String,String> dados){
         Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
         if(usuarioOptional.isPresent()){
@@ -48,7 +48,6 @@ public class UsuarioService {
         }
     }
 
-    //metado para deletar
     public void excluir(Long id){
         Optional<Usuario> excluirUsuario = usuarioRepository.findById(id);
 
