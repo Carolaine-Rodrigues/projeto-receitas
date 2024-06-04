@@ -35,7 +35,7 @@ public class AppException extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity newExceptionHandlerNoSuchElement(Exception e){
-        return new ResponseEntity("Verifique o parâmetro da url.", HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity("Verifique o parâmetro da url.", HttpStatus.BAD_REQUEST);
     }
 
 
