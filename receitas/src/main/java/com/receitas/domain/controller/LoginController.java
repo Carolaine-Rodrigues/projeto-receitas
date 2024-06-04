@@ -1,5 +1,6 @@
 package com.receitas.domain.controller;
 
+import com.receitas.convert.ConvertMap;
 import com.receitas.domain.user.Usuario;
 import com.receitas.domain.user.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,9 +50,21 @@ public class LoginController {
         return ResponseEntity.noContent().build();
     }
     @PatchMapping("/atualizar/{id}")
-    public ResponseEntity atualizar(@PathVariable Long id, @RequestBody Usuario dados){
-        var atualizarUsuario = usuarioService.atualizar(id,(Map<String, String>) dados);
-        return ResponseEntity.ok().body(atualizarUsuario);
+    public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody Usuario dados){
+
+        try {
+            Map<String, String> atualizarMap = ConvertMap.convertDTOToMap(dados);
+            var atualizarUsuario = usuarioService.atualizar(id,atualizarMap);
+
+            return ResponseEntity.ok().body(atualizarUsuario);
+
+
+        } catch (IllegalAccessException e) {
+            return ResponseEntity.status(500).body("Erro ao converter Usuario para Map: " + e.getMessage());
+        }
+
+
+
     }
 }
 

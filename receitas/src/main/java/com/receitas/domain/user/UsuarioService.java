@@ -31,19 +31,23 @@ public class UsuarioService {
         return usuario;
     }
 
-    public Usuario atualizar(Long id, Map<String,String> dados){
+    public Usuario atualizar(Long id, Map<String,String> dados) {
         Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
-        if(usuarioOptional.isPresent()){
+        if (usuarioOptional.isPresent()) {
             Usuario usuario = usuarioOptional.get();
-            if(dados.containsKey("email")){
-                usuario.setEmail(dados.get("email"));
-            }
-            if(dados.containsKey("senha")){
-                usuario.setSenha(dados.get("senha"));
+            for (Map.Entry<String, String> valorUsuario : dados.entrySet()) {
+                String chave = valorUsuario.getKey();
+                String valor = valorUsuario.getValue();
+                if ("email".equals(chave) && valor instanceof String) {
+                    usuario.setEmail(valor);
+                }
+                if ("senha".equals(chave) && valor instanceof String) {
+                    usuario.setSenha(valor);
+                }
             }
             usuarioRepository.save(usuario);
             return usuario;
-        }else{
+        } else {
             throw new EntityNotFoundException();
         }
     }
