@@ -38,7 +38,7 @@ public class UsuarioService {
             for (Map.Entry<String, String> valorUsuario : dados.entrySet()) {
                 String chave = valorUsuario.getKey();
                 String valor = valorUsuario.getValue();
-                if ("email".equals(chave) && valor instanceof String) {
+                if ("email".equals(chave)  && valor instanceof String) {
                     usuario.setEmail(valor);
                 }
                 if ("senha".equals(chave) && valor instanceof String) {

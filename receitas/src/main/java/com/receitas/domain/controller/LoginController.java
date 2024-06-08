@@ -63,8 +63,6 @@ public class LoginController {
             return ResponseEntity.status(500).body("Erro ao converter Usuario para Map: " + e.getMessage());
         }
 
-
-
     }
 }
 
